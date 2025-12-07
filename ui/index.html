@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>GarudaDrishti — Live Feed</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/glass.css" />
+  <script src="js/transitions.js" defer></script>
+  <script src="js/app.js" defer></script>
+</head>
+<body class="page page--fade">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar glass">
+    <div class="brand">
+      <img src="assets/logo.png" alt="GarudaDrishti" class="brand__logo" />
+      <div class="brand__text">
+        <div class="brand__title">Garuda<span class="accent">Drishti</span></div>
+        <div class="brand__sub">AI-Powered Campus Surveillance</div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a href="index.html" class="nav__item nav__item--active">Home</a>
+      <a href="lost_found.html" class="nav__item">Lost &amp; Found</a>
+      <a href="analytics.html" class="nav__item">Analytics &amp; Logs</a>
+      <a href="utilities.html" class="nav__item">Campus Utilities</a>
+    </nav>
+
+    <div class="sidebar__footer">
+      <small class="muted">© 2025 GarudaDrishti</small>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <header class="main__header">
+      <h1 class="heading">Live Camera Feed</h1>
+      <p class="lead">Real-time detection of Fire · Smoke · Violent incidents</p>
+    </header>
+
+    <section class="grid grid--2cols">
+      <!-- live feed / upload -->
+      <article class="card feed-card glass" aria-label="Live Feed Card">
+        <div class="card__head">
+          <h2 class="card__title">Preview / Upload </h2>
+          <div class="card__actions">
+            <label class="btn btn--ghost">
+              <input id="fileInput" type="file" accept="image/*" style="display:none" />
+              Upload Image
+            </label>
+            <button id="analyzeBtn" class="btn btn--primary">Analyze</button>
+          </div>
+        </div>
+
+        <div class="preview-wrap">
+          <canvas id="previewCanvas" class="preview-canvas" aria-label="Preview canvas"></canvas>
+          <div id="previewPlaceholder" class="preview-placeholder">
+            <div class="placeholder-text">No image selected — upload a sample to demo detection</div>
+          </div>
+        </div>
+
+        <div class="card__foot">
+          <div id="status" class="status muted"></div>
+        </div>
+      </article>
+
+      <!-- alerts -->
+      <aside class="card alerts-card glass" aria-label="Alerts">
+        <h2 class="card__title">Live Alerts</h2>
+
+        <div class="alerts-grid">
+          <div class="stat">
+            <div class="stat__count" id="fireCount">0</div>
+            <div class="stat__label">Fire</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat__count" id="smokeCount">0</div>
+            <div class="stat__label">Smoke</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat__count" id="fightCount">0</div>
+            <div class="stat__label">Fight</div>
+          </div>
+        </div>
+
+        <h3 class="recent-title">Recent Incidents</h3>
+        <div id="recentAlerts" class="recent-list"></div>
+
+        <div class="card__foot">
+          <button id="clearAlertsBtn" class="btn btn--muted">Clear Alerts</button>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+</body>
+</html>

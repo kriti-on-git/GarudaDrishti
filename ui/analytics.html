@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>GarudaDrishti — Analytics</title>
+
+  <link rel="stylesheet" href="css/style.css?ver=2" />
+  <link rel="stylesheet" href="css/glass.css?ver=2" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+
+  <style>
+    /* Prevent counter animation pop */
+    .stat__count {
+      transition: none !important;
+      transform: none !important;
+    }
+
+    /* Chart sizing */
+    #pieChart,
+    #timeChart {
+      width: 100%;
+      max-height: 320px;
+    }
+
+    /* Card entrance animation */
+    .card-animate {
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeInUp .55s ease forwards;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    /* Canvas fix */
+    .card canvas {
+      display: block;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body class="page page--fade">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar glass">
+    <div class="brand">
+      <img src="assets/logo.png" class="brand__logo" />
+      <div class="brand__text">
+        <div class="brand__title">Garuda<span class="accent">Drishti</span></div>
+        <div class="brand__sub">AI-Powered Campus Surveillance</div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a href="index.html" class="nav__item">Home</a>
+      <a href="lost_found.html" class="nav__item">Lost & Found</a>
+      <a href="analytics.html" class="nav__item nav__item--active">Analytics & Logs</a>
+      <a href="utilities.html" class="nav__item">Campus Utilities</a>
+    </nav>
+
+    <div class="sidebar__footer">
+      <small class="muted">© 2025 GarudaDrishti</small>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- HEADER -->
+    <header class="main__header">
+      <h1 class="heading">Analytics & Logs</h1>
+      <p class="lead">Incident distribution, frequency trends & recent logs.</p>
+    </header>
+
+    <!-- ========================= -->
+    <!--       OVERVIEW CARDS      -->
+    <!-- ========================= -->
+    <section class="ana-overview">
+      <div class="card glass card-animate">
+        <h4 class="medium"><i class="fa-solid fa-fire"></i> Total Fire</h4>
+        <div id="anaFire" class="stat__count">0</div>
+      </div>
+
+      <div class="card glass card-animate">
+        <h4 class="medium"><i class="fa-solid fa-cloud"></i> Total Smoke</h4>
+        <div id="anaSmoke" class="stat__count">0</div>
+      </div>
+
+      <div class="card glass card-animate">
+        <h4 class="medium"><i class="fa-solid fa-hand-fist"></i> Total Violence</h4>
+        <div id="anaFight" class="stat__count">0</div>
+      </div>
+
+      <div class="card glass card-animate">
+        <h4 class="medium"><i class="fa-solid fa-triangle-exclamation"></i> Total Incidents</h4>
+        <div id="anaTotal" class="stat__count">0</div>
+      </div>
+    </section>
+
+    <!-- ========================= -->
+    <!--          CHARTS           -->
+    <!-- ========================= -->
+    <section class="ana-charts">
+
+      <!-- Donut Chart -->
+      <article class="card glass card-animate">
+        <h2 class="card__title">Incident Distribution</h2>
+        <canvas id="pieChart"></canvas>
+      </article>
+
+      <!-- Time Chart -->
+      <article class="card glass card-animate">
+        <h2 class="card__title">Alerts by Time of Day</h2>
+        <canvas id="timeChart"></canvas>
+      </article>
+
+    </section>
+
+    <!-- ========================= -->
+    <!--        RECENT LOGS        -->
+    <!-- ========================= -->
+    <section class="ana-logs">
+      <article class="card glass card-animate">
+        <h2 class="card__title">Recent Logs</h2>
+        <div id="logsList" class="recent-list"></div>
+      </article>
+    </section>
+
+  </main>
+
+  <!-- ========================= -->
+  <!--     ANALYTICS SCRIPT      -->
+  <!-- ========================= -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      setTimeout(loadAnalytics, 200);
+
+      async function loadAnalytics() {
+        const API = "http://localhost:8000";
+        let alerts = [];
+
+        try {
+          const r = await fetch(API + "/alerts/all");
+          if (r.ok) alerts = await r.json();
+        } catch (e) {
+          console.warn("Failed to load alerts:", e);
+        }
+
+        const fire = alerts.filter(a => /fire/i.test(a.alert_type)).length;
+        const smoke = alerts.filter(a => /smoke/i.test(a.alert_type)).length;
+        const fight = alerts.filter(a => /fight/i.test(a.alert_type)).length;
+
+        anaFire.textContent = fire;
+        anaSmoke.textContent = smoke;
+        anaFight.textContent = fight;
+        anaTotal.textContent = alerts.length;
+
+        loadPie(fire, smoke, fight);
+        loadTimeChart();
+
+        // recent logs
+        logsList.innerHTML = "";
+        alerts.slice(0, 3).forEach(a => {
+          const div = document.createElement("div");
+          div.className = "item";
+          div.innerHTML = `
+          <strong>${escape(a.alert_type)}</strong>
+          <div class="small muted">${escape(a.description || "")}</div>
+          <div class="small muted">${escape(a.timestamp || "")}</div>
+        `;
+          logsList.appendChild(div);
+        });
+      }
+
+      function loadPie(fire, smoke, fight) {
+        if (window._pieChart) window._pieChart.destroy();
+        window._pieChart = new Chart(pieChart, {
+          type: "doughnut",
+          data: {
+            labels: ["Fire", "Smoke", "Violence"],
+            datasets: [{
+              data: [fire, smoke, fight],
+              backgroundColor: ["#ff6b6b", "#9bc6ff", "#ffd166"],
+              borderColor: "#071322",
+              borderWidth: 2
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: "48%",
+            plugins: {
+              legend: {
+                labels: { color: "#fff", padding: 12 }
+              }
+            }
+          }
+        });
+      }
+
+      function loadTimeChart() {
+        if (window._timeChart) window._timeChart.destroy();
+        window._timeChart = new Chart(timeChart, {
+          type: "bar",
+          data: {
+            labels: ["Morning", "Afternoon", "Evening", "Night"],
+            datasets: [{
+              label: "Alerts",
+              data: [12, 34, 22, 12],
+              backgroundColor: "rgba(77,166,255,0.95)",
+              borderRadius: 8,
+              barThickness: 28
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              x: { ticks: { color: "#bcd" }, grid: { display: false } },
+              y: { ticks: { color: "#bcd" }, grid: { color: "rgba(255,255,255,0.05)" } }
+            }
+          }
+        });
+      }
+
+      const escape = s => String(s).replace(/[&<>"']/g, m => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      }[m]));
+    });
+  </script>
+
+</body>
+
+</html>

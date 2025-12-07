@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>GarudaDrishti — Campus Utilities</title>
+
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/glass.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  
+  <!-- Page-specific style -->
+  <style>
+    /* Floating SOS button (icon + text pill) */
+    .floating-sos {
+      position: fixed;
+      top: 20px;
+      right: 24px;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      background: linear-gradient(90deg, rgba(255,50,50,0.95), rgba(255,90,90,0.95));
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 28px;
+      box-shadow: 0 8px 30px rgba(255,50,50,0.25), 0 2px 6px rgba(0,0,0,0.5);
+      cursor: pointer;
+      font-weight: 700;
+      transition: 0.25s ease;
+    }
+    .floating-sos:hover { transform: translateY(-4px); }
+
+    @keyframes sosPulse {
+      0% { box-shadow: 0 0 0 0 rgba(255,70,70,0.4); }
+      70% { box-shadow: 0 0 30px 8px rgba(255,70,70,0); }
+      100% { box-shadow: 0 0 0 0 rgba(255,70,70,0); }
+    }
+    .pulse { animation: sosPulse 2.8s infinite; }
+
+    /* Page layout */
+    .utilities-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 24px;
+    }
+    @media (max-width: 980px){
+      .utilities-wrapper { grid-template-columns: 1fr; }
+    }
+
+    /* Announcements */
+    .announcements-list {
+      display: grid;
+      gap: 14px;
+    }
+    .announcement-card {
+      padding: 16px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.06);
+      backdrop-filter: blur(16px);
+      transition: 0.25s ease;
+    }
+    .announcement-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+    }
+
+    .announcement-tag {
+      display:inline-block;
+      padding:4px 8px;
+      margin-right:8px;
+      font-size:12px;
+      font-weight:700;
+      border-radius:8px;
+    }
+    .urgent { background:#ffb86b; color:#291111; }
+    .general { background:#8fc7ff; color:#082035; }
+
+    /* FAQ accordion */
+    .faq-item {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.05);
+      padding: 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.25s;
+    }
+    .faq-item:hover {
+      background: rgba(255,255,255,0.06);
+    }
+    .faq-question {
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .faq-answer {
+      margin-top: 8px;
+      display: none;
+      color: #cfd8e5;
+      font-size: 0.95rem;
+    }
+    .faq-item.open .faq-answer {
+      display: block;
+    }
+
+    /* Guidelines card */
+    .guidelines {
+      padding: 18px;
+      border-radius: 12px;
+      min-height: 250px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .yt-btn {
+      background: linear-gradient(90deg,#1e90ff,#00d4ff);
+      padding: 10px 16px;
+      color: #fff;
+      border-radius: 8px;
+      margin-top: auto;
+      font-weight: 700;
+      text-decoration:none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+  </style>
+</head>
+
+<body class="page page--fade">
+
+  <!-- Sidebar -->
+  <aside class="sidebar glass">
+    <div class="brand">
+      <img src="assets/logo.png" class="brand__logo" />
+      <div class="brand__text">
+        <div class="brand__title">Garuda<span class="accent">Drishti</span></div>
+        <div class="brand__sub">AI-Powered Campus Surveillance</div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a class="nav__item" href="index.html">Home</a>
+      <a class="nav__item" href="lost_found.html">Lost &amp; Found</a>
+      <a class="nav__item" href="analytics.html">Analytics &amp; Logs</a>
+      <a class="nav__item nav__item--active" href="utilities.html">Campus Utilities</a>
+    </nav>
+
+    <div class="sidebar__footer">
+      <small class="muted">© 2025 GarudaDrishti</small>
+    </div>
+  </aside>
+
+  <!-- Floating SOS Button -->
+  <div id="sosBtn" class="floating-sos pulse">
+    <span style="font-size: 20px;
+    color: #000000c7;
+    text-shadow: 0 0 0 whitesmoke;
+    transform: translate(0px, -3px);">🚨</span>
+    <span>SOS</span>
+  </div>
+
+  <!-- Main -->
+  <main class="main">
+    <header class="main__header">
+      <h1 class="heading">Campus Utilities</h1>
+      <p class="lead">Announcements, emergency guidelines, and FAQs.</p>
+    </header>
+
+    <!-- Announcements Section -->
+    <article class="card glass" style="margin-bottom:24px; padding:20px;">
+      <h2 class="card__title"><i class="fa-solid fa-bell"></i> Campus Announcements</h2>
+      <p class="muted">Official notices and campus alerts.</p>
+
+      <div id="announcements" class="announcements-list" style="margin-top:16px;"></div>
+    </article>
+
+    <!-- Layout: FAQ left — Guidelines right -->
+    <section class="utilities-wrapper">
+
+      <!-- FAQ column -->
+      <article class="card glass" style="padding:20px;">
+        <h2 class="card__title"><i class="fa-solid fa-circle-question"></i> FAQ</h2>
+        <p class="muted">Frequently asked queries.</p>
+
+        <div id="faqList" style="margin-top:14px;"></div>
+      </article>
+
+      <!-- Guidelines column -->
+      <aside class="card glass guidelines">
+        <h2 class="card__title"><i class="fa-solid fa-shield-halved"></i> Emergency Guidelines</h2>
+
+        <p><strong>Fire/Smoke:</strong> Use nearest extinguisher and evacuate.</p>
+        <p><strong>Violence:</strong> Seek safe location and call campus security.</p>
+        <p><strong>Medical:</strong> Call campus clinic immediately.</p>
+        <p><strong>Evacuation Point:</strong> Assemble at Main Football Ground.</p>
+
+        <h3 style="margin-top:12px;">Emergency Contacts</h3>
+        <p>🚓 <strong>Security:</strong> +91 98765 43210</p>
+        <p>🏥 <strong>Campus Clinic:</strong> +91 98765 99887</p>
+        <p>🔥 <strong>Fire Dept:</strong> 101</p>
+
+        <a class="yt-btn" target="_blank" href="https://youtu.be/vcQeudtILQk?si=LYhO0MbdymF2wkhb">
+          ▶ Watch Safety Guide
+        </a>
+      </aside>
+
+    </section>
+
+  </main>
+
+  <script src="js/utilities.js" defer></script>
+
+<div id="utilToast"
+     style="
+       position: fixed;
+       bottom: 28px;
+       right: 28px;
+       background: rgba(0,0,0,0.75);
+       color: #fff;
+       padding: 12px 18px;
+       border-radius: 10px;
+       backdrop-filter: blur(10px);
+       display:none;
+       z-index:99999;
+       font-weight:600;
+     ">
+</div>
+
+
+</body>
+</html>

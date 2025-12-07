@@ -1,0 +1,504 @@
+/* =========================================
+   GarudaDrishti - style.css
+   Subtle Glass (option B) | radius: 18px | hover: medium | spacing: spacious
+   Replace your existing style.css with this file
+========================================= */
+
+/* ---------- VARIABLES ---------- */
+:root {
+  --bg-100: #061019;
+  --bg-200: #071523;
+  --page-bg: linear-gradient(180deg, var(--bg-100) 0%, var(--bg-200) 100%);
+  --card-bg: rgba(18, 28, 40, 0.7);
+  --card-contrast: rgba(255, 255, 255, 0.03);
+  --muted: #9aa7c7;
+  --accent: #00a6ff;
+  --accent-2: #1ea7ff;
+  --glass-edge: rgba(255, 255, 255, 0.04);
+
+  --radius: 18px;
+  --gap: 28px; /* spacious */
+  --shadow-mild: 0 10px 30px rgba(3, 8, 18, 0.55);
+  --shadow-strong: 0 22px 50px rgba(2, 6, 18, 0.6);
+  --glass-blur: 12px;
+}
+
+/* ---------- BASE ---------- */
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial;
+  background: var(--page-bg);
+  background-attachment: fixed;
+  color: #e6eef8;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.45;
+}
+
+/* ---------- LAYOUT ---------- */
+.sidebar {
+  width: 260px;
+  padding: 30px;
+  position: fixed;
+  left: 24px;
+  top: 24px;
+  bottom: 24px;
+  border-radius: calc(var(--radius) + 2px);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  align-items: flex-start;
+  background: linear-gradient(
+    180deg,
+    rgba(10, 18, 28, 0.48),
+    rgba(10, 18, 28, 0.36)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.02);
+  box-shadow: 0 12px 38px rgba(2, 6, 12, 0.55);
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+  z-index: 40;
+}
+
+.main {
+  margin-left: 320px;
+  padding: 36px;
+  max-width: 1300px;
+  min-height: 100vh;
+}
+
+/* brand */
+.brand {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.brand__logo {
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.brand__title {
+  font-weight: 700;
+  font-size: 18px;
+}
+.brand__sub {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* nav */
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+.nav__item {
+  padding: 10px 12px;
+  border-radius: 10px;
+  color: var(--muted);
+  text-decoration: none;
+  display: block;
+  width: 100%;
+  transition: all 0.22s cubic-bezier(0.2, 0.9, 0.2, 1);
+}
+.nav__item:hover {
+  background: rgba(0, 166, 255, 0.06);
+  color: var(--accent);
+}
+.nav__item--active {
+  background: rgba(0, 166, 255, 0.1);
+  color: var(--accent);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.15);
+}
+
+/* headings */
+.main__header {
+  margin-bottom: 24px;
+}
+.heading {
+  font-size: 34px;
+  margin: 0;
+}
+.lead {
+  color: var(--muted);
+  margin-top: 8px;
+}
+
+/* grid */
+.grid {
+  display: grid;
+  gap: var(--gap);
+}
+.grid--2cols {
+  grid-template-columns: 1.6fr 1fr;
+  align-items: start;
+}
+.grid--4cols {
+  grid-template-columns: repeat(4, 1fr);
+  align-items: stretch;
+  gap: var(--gap);
+}
+.grid--1col {
+  grid-template-columns: 1fr;
+}
+
+/* ---------- GLASS CARDS ---------- */
+/* subtle glass look (option B) */
+.card {
+  background: linear-gradient(
+    180deg,
+    rgba(20, 30, 42, 0.65),
+    rgba(10, 18, 30, 0.54)
+  );
+  border-radius: var(--radius);
+  padding: 20px;
+  border: 1px solid var(--glass-edge);
+  box-shadow: var(--shadow-mild);
+  backdrop-filter: blur(var(--glass-blur)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(140%);
+  transition: transform 0.28s cubic-bezier(0.2, 0.9, 0.2, 1),
+    box-shadow 0.28s ease, border-color 0.2s ease;
+}
+
+/* card title */
+.card__title {
+  font-weight: 700;
+  margin: 0 0 12px 0;
+  color: #e9f6ff;
+}
+.card__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* spacing inside cards slightly larger */
+.card p,
+.card .muted {
+  color: var(--muted);
+}
+
+/* make cards visually separated from each other (prevents merger) */
+.card + .card {
+  margin-top: 6px;
+}
+
+/* card hover - medium */
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-strong);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* slight glass inset at top corners for subtle highlight */
+.card::before {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  inset: auto auto calc(100% - 8px) 0;
+  height: 8px;
+  border-radius: calc(var(--radius) - 14px);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.02),
+    rgba(255, 255, 255, 0)
+  );
+}
+
+/* ---------- BUTTONS ---------- */
+.btn {
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 0;
+  cursor: pointer;
+  font-weight: 700;
+}
+.btn--primary {
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  color: #021322;
+  box-shadow: 0 6px 18px rgba(0, 166, 255, 0.08);
+}
+.btn--ghost {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}
+.btn--muted {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+.btn--danger {
+  background: #ff5c5c;
+  color: #fff;
+}
+
+/* ---------- PREVIEW ---------- */
+.preview-wrap {
+  position: relative;
+  margin-top: 12px;
+  height: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  overflow: hidden;
+}
+.preview-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+}
+.preview-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  font-size: 14px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.01), transparent);
+}
+
+/* ---------- ALERTS / STATS ---------- */
+.alerts-grid {
+  display: flex;
+  gap: 18px;
+  margin: 18px 0;
+}
+.stat {
+  flex: 1;
+  text-align: center;
+  padding: 16px;
+  border-radius: 12px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.01),
+    rgba(255, 255, 255, 0)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.02);
+}
+.stat__count {
+  font-weight: 800;
+  font-size: 22px;
+  color: var(--accent);
+}
+.stat__label {
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 6px;
+}
+.recent-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 12px;
+}
+.recent-list .item {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.01),
+    rgba(255, 255, 255, 0)
+  );
+  padding: 12px;
+  border-radius: 12px;
+  color: #dfeeff;
+  font-size: 13px;
+  border: 1px solid rgba(255, 255, 255, 0.02);
+}
+
+/* ---------- FORMS ---------- */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.input {
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  background: transparent;
+  color: inherit;
+}
+
+/* ---------- SMALL ---------- */
+.recent-title {
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 13px;
+}
+.muted {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 1100px) {
+  .main {
+    margin-left: 300px;
+    padding: 22px;
+  }
+  .grid--4cols {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 900px) {
+  .sidebar {
+    position: relative;
+    left: 12px;
+    top: 12px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 12px;
+    border-radius: 12px;
+  }
+  .main {
+    margin-left: 0;
+    padding: 18px;
+  }
+  .grid--2cols {
+    grid-template-columns: 1fr;
+  }
+  .grid--4cols {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- ANIMATIONS (alerts & subtle card in) ---------- */
+@keyframes slideIn {
+  0% {
+    transform: translateX(24px);
+    opacity: 0;
+  }
+  100% {
+    transform: none;
+    opacity: 1;
+  }
+}
+@keyframes pulseGlow {
+  0% {
+    box-shadow: 0 0 0 rgba(0, 166, 255, 0);
+  }
+  50% {
+    box-shadow: 0 0 12px rgba(0, 166, 255, 0.35);
+  }
+  100% {
+    box-shadow: 0 0 0 rgba(0, 166, 255, 0);
+  }
+}
+
+.alert-new {
+  animation: slideIn 0.36s cubic-bezier(0.2, 0.9, 0.2, 1), pulseGlow 1.2s ease;
+}
+
+/* ---------- CHARTS (prevent odd backgrounds merging) ---------- */
+canvas {
+  background: transparent !important;
+  display: block;
+  max-width: 100%;
+  height: auto !important;
+}
+
+/* ---------- HELPERS ---------- */
+.small {
+  font-size: 13px;
+  color: var(--muted);
+}
+.center {
+  text-align: center;
+}
+
+/* accessibility focus */
+.nav__item:focus,
+.btn:focus {
+  outline: 3px solid rgba(0, 166, 255, 0.08);
+  outline-offset: 2px;
+}
+
+/* === Analytics Page Independent Grids === */
+
+/* ---- 4 Cards Overview Row ---- */
+.ana-overview {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 22px;
+  margin-bottom: 26px;
+}
+
+@media (max-width: 1200px) {
+  .ana-overview {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .ana-overview {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---- Charts Row (2 columns) ---- */
+.ana-charts {
+  display: grid;
+  grid-template-columns: 1.7fr 1.3fr;
+  gap: 22px;
+  margin-bottom: 26px;
+}
+
+@media (max-width: 980px) {
+  .ana-charts {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---- Logs Row ---- */
+.ana-logs {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 22px;
+}
+
+/* Fix accent text color */
+.brand__title .accent {
+  color: var(--accent) !important;
+}
+
+/* Analytics overview title size */
+#overviewRow h4.small {
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+/* Analytics overview number size */
+#overviewRow .stat__count {
+  font-size: 2.2rem;
+  font-weight: 800;
+}
+
+/* Mimic the old "Drishti" look */
+.accent {
+  color: #4da6ff !important; /* light blue */
+  font-weight: 600; /* slightly thinner */
+  letter-spacing: 0.6px; /* gives that digital clean look */
+  text-shadow: 0 0 4px rgba(77, 166, 255, 0.5),
+    /* soft blue glow */ 0 0 8px rgba(77, 166, 255, 0.3);
+}
+.fa-solid {
+  font-size: 19px;
+  margin-right: 5px;
+}

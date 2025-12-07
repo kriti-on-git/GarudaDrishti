@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>GarudaDrishti — Lost & Found</title>
+
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/glass.css" />
+  <script src="js/transitions.js" defer></script>
+</head>
+
+<body class="page page--fade">
+
+  <!-- SIDEBAR (same as home) -->
+  <aside class="sidebar glass">
+    <div class="brand">
+      <img src="assets/logo.png" class="brand__logo" alt="logo" />
+      <div class="brand__text">
+        <div class="brand__title">Garuda<span class="accent">Drishti</span></div>
+        <div class="brand__sub">AI-Powered Campus Surveillance</div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a href="index.html" class="nav__item">Home</a>
+      <a href="lost_found.html" class="nav__item nav__item--active">Lost &amp; Found</a>
+      <a href="analytics.html" class="nav__item">Analytics &amp; Logs</a>
+      <a href="utilities.html" class="nav__item">Campus Utilities</a>
+    </nav>
+
+    <div class="sidebar__footer">
+      <small class="muted">© 2025 GarudaDrishti</small>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+
+    <header class="main__header">
+      <h1 class="heading">Lost &amp; Found Portal</h1>
+      <p class="lead">Submit lost items and browse active campus-wide reports.</p>
+    </header>
+
+    <section class="grid grid--2cols">
+
+      <!-- LEFT: Add Item -->
+      <article class="card glass" style="animation: fadeSlide 0.4s ease;">
+        <div class="card__head">
+          <h2 class="card__title">Add Lost / Found Item</h2>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Item Name</label>
+          <input id="lf_name" class="form-input" placeholder="Wallet, Laptop, ID Card..." />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <textarea id="lf_desc" class="form-input" rows="3" placeholder="Color, details, last seen location..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Status</label>
+          <select id="lf_status" class="form-input select-dark">
+            <option value="lost">Lost</option>
+            <option value="found">Found</option>
+          </select>
+        </div>
+
+        <div class="card__foot">
+          <button id="lf_add_btn" class="btn btn--primary">Submit Item</button>
+        </div>
+      </article>
+
+      <!-- RIGHT: Recent Items -->
+      <aside class="card glass" style="animation: fadeSlide 0.6s ease;">
+        <div class="card__head" style="display:flex; justify-content:space-between; align-items:center;">
+          <h2 class="card__title">Recent Submissions</h2>
+          <button id="lf_clear_btn" class="btn btn--danger btn--small">Clear All</button>
+        </div>
+
+        <div id="lf_list" class="lf-list"></div>
+      </aside>
+
+    </section>
+  </main>
+
+  <!-- PAGE-SPECIFIC STYLES -->
+  <style>
+    @keyframes fadeSlide {
+      from { opacity:0; transform: translateY(10px); }
+      to { opacity:1; transform: translateY(0); }
+    }
+
+    .form-group { margin-bottom: 16px; }
+    .form-label { display:block; margin-bottom:6px; font-size:14px; opacity:0.8; }
+
+    .form-input {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.05);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.08);
+      outline: none;
+      font-size: 15px;
+    }
+
+    .form-input:focus {
+      border-color: #1d9bf0;
+      background: rgba(255,255,255,0.08);
+    }
+
+    /* Dark select to match UI */
+    .select-dark {
+      color: #fff;
+      appearance: none;
+      background-image: url("data:image/svg+xml,<svg width='12' height='12' xmlns='http://www.w3.org/2000/svg'><path fill='%23aaa' d='M2 4l4 4 4-4'/></svg>");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 12px;
+    }
+
+    /* List items */
+    .lf-list .item-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 12px;
+      animation: fadeSlide 0.3s ease;
+    }
+
+    .badge {
+      padding: 4px 10px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight:600;
+      color:white;
+    }
+
+    .badge.lost { background:#d83434; }
+    .badge.found { background:#24c15a; }
+  </style>
+
+  <!-- JS -->
+  <script>
+    const lfName = document.getElementById("lf_name");
+    const lfDesc = document.getElementById("lf_desc");
+    const lfStatus = document.getElementById("lf_status");
+    const lfAddBtn = document.getElementById("lf_add_btn");
+    const lfClearBtn = document.getElementById("lf_clear_btn");
+    const lfList = document.getElementById("lf_list");
+
+    function renderItems(list) {
+      lfList.innerHTML = "";
+      list.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "item-card";
+        div.innerHTML = `
+          <div style="display:flex; justify-content:space-between;">
+            <strong>${item.item_name}</strong>
+            <span class="badge ${item.status}">${item.status.toUpperCase()}</span>
+          </div>
+          <p style="opacity:0.8; margin:6px 0;">${item.description}</p>
+          <p class="muted" style="font-size:12px;">${item.timestamp}</p>
+        `;
+        lfList.appendChild(div);
+      });
+    }
+
+    async function loadItems() {
+      const res = await fetch("http://localhost:8000/lost-found/all");
+      renderItems(await res.json());
+    }
+
+    lfAddBtn.onclick = async () => {
+      if (!lfName.value.trim()) return alert("Enter item name");
+      await fetch("http://localhost:8000/lost-found/add", {
+        method:"POST",
+        headers: { "Content-Type":"application/json" },
+        body: JSON.stringify({
+          item_name: lfName.value,
+          description: lfDesc.value,
+          status: lfStatus.value
+        })
+      });
+      lfName.value = lfDesc.value = "";
+      loadItems();
+    };
+
+    lfClearBtn.onclick = async () => {
+      if (!confirm("Clear all?")) return;
+      await fetch("http://localhost:8000/lost-found/clear",{method:"DELETE"});
+      loadItems();
+    };
+
+    loadItems();
+  </script>
+
+</body>
+</html>
