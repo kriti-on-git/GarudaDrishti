@@ -1,4 +1,4 @@
-# Campus Safety AI
+# GarudaDrishti Campus Safety AI
 
 A full-stack AI system for detecting fire, smoke, and fights on campus, along with
 real-time alerts, lost and found management, announcements, and SOS support.
