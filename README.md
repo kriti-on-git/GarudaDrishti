@@ -13,7 +13,7 @@ real-time alerts, lost and found management, announcements, and SOS support.
 
 ## Tech Stack
 Backend: FastAPI, Python, PyTorch  
-Frontend: React.js  
+Frontend: HTML, CSS, JS  
 Database: SQLite  
 
 
